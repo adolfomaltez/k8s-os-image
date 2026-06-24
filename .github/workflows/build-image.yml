@@ -5,6 +5,9 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: self-hosted
@@ -56,12 +59,31 @@ jobs:
         run: |
           ls -lh output/
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Crear Release Oficial y Adjuntar QCOW2
+        uses: softprops/action-gh-release@v2
         with:
-          name: openSUSE-Leap-Micro-6.2-custom.x86_64-${{ env.IMAGE_VERSION }}
-          path: output/*.qcow2
-          retention-days: 3
+          tag_name: v${{ env.IMAGE_VERSION }}
+          name: Release v${{ env.IMAGE_VERSION }}
+          body: |
+            ## Nueva versión de la imagen inmutable para Kubernetes
+            
+            Compilación automatizada en el Homelab.
+            - **Versión base:** openSUSE Leap Micro 6.2
+            - **Build ID:** ${{ github.run_id }}
+            - **Commit:** ${{ github.sha }}
+          draft: false
+          prerelease: false
+          # Apuntamos directamente al archivo de disco virtual final
+          files: output/*.qcow2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: openSUSE-Leap-Micro-6.2-custom.x86_64-${{ env.IMAGE_VERSION }}
+#          path: output/*.qcow2
+#          retention-days: 3
 
       - name: Post-Build clean
         if: always()
