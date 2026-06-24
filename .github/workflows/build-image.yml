@@ -16,7 +16,7 @@ jobs:
       - name: Inject automatic version on config.xml
         run: |
           NEW_VERSION="0.0.${{ github.run_number }}"
-          echo "New version": $NEW_VERSION"
+          echo "New version: $NEW_VERSION"
           
           # Automatic replace
           sed -i "s|<version>.*</version>|<version>$NEW_VERSION</version>|g" config.xml
