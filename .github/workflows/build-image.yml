@@ -59,6 +59,17 @@ jobs:
         run: |
           ls -lh output/
 
+      - name: Get the SHA512 from QCOW2
+        run: |
+          cd output
+          # Calculamos el hash del archivo .qcow2 generado
+          SHA_RESULT=$(sha512sum *.qcow2)
+          echo "Checksum calculado: $SHA_RESULT"
+          
+          # Guardamos solo el hash (sin el nombre del archivo) en el entorno de GitHub
+          # Usamos 'awk' para extraer la primera columna (el hash de 128 caracteres)
+          echo "IMAGE_SHA=$(echo $SHA_RESULT | awk '{print $1}')" >> $GITHUB_ENV
+
       - name: Crear Release Oficial y Adjuntar QCOW2
         uses: softprops/action-gh-release@v2
         with:
@@ -71,6 +82,13 @@ jobs:
             - **Versión base:** openSUSE Leap Micro 6.2
             - **Build ID:** ${{ github.run_id }}
             - **Commit:** ${{ github.sha }}
+            ### 🔒 Verificación de Integridad (Checksum)
+            ```text
+            sha512sum: ${{ env.IMAGE_SHA }}
+            ```
+            
+            _Puedes verificar la descarga ejecutando:_
+            `echo "${{ env.IMAGE_SHA }}  nombre-del-archivo.qcow2" | sha512sum --check`
           draft: false
           prerelease: false
           # Apuntamos directamente al archivo de disco virtual final
