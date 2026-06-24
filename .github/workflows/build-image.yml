@@ -13,6 +13,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Inject automatic version on config.xml
+        run: |
+          NEW_VERSION="0.0.${{ github.run_number }}"
+          echo "New version": $NEW_VERSION"
+          
+          # Automatic replace
+          sed -i "s|<version>.*</version>|<version>$NEW_VERSION</version>|g" config.xml
+          
+          # Save new version variable
+          echo "IMAGE_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
       - name: Debug environment
         run: |
@@ -49,9 +59,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kiwi-image
+          name: openSUSE-Leap-Micro-6.2-custom.x86_64-${{ env.IMAGE_VERSION }}
           path: output/*.qcow2
           retention-days: 3
+
       - name: Post-Build clean
         if: always()
         run: |
