@@ -50,4 +50,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: kiwi-image
-          path: output/
+          path: output/*.qcow2
+          retention-days: 3
