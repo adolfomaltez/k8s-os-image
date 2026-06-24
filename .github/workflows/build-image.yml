@@ -1,0 +1,53 @@
+name: build-image
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+
+      - name: Debug environment
+        run: |
+          whoami
+          id
+          docker version
+
+      - name: Ensure kiwi cache exists
+        run: |
+          sudo mkdir -p /var/cache/kiwi
+          sudo chmod 777 /var/cache/kiwi
+
+      - name: Pull kiwi image
+        run: |
+          sudo docker pull registry.opensuse.org/opensuse/bci/kiwi:latest
+
+
+      - name: Build KIWI image with Docker
+        run: |
+          sudo docker run --rm --privileged \
+            -v /dev:/dev \
+            -v ${{ github.workspace }}:/workspace \
+            -v /var/cache/kiwi:/var/cache/kiwi \
+            --network host \
+            registry.opensuse.org/opensuse/bci/kiwi:latest \
+            kiwi-ng --loglevel 2 system build \
+            --description /workspace \
+            --target-dir /workspace/output
+
+      - name: List output files
+        run: |
+          ls -lh output/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kiwi-image
+          path: output/

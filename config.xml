@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<image schemaversion="7.4" name="openSUSE-Leap-Micro-6.2-custom">
+    <description type="system">
+        <author>taro</author>
+        <contact>taro@foo.com</contact>
+        <specification>Custom openSUSE Leap Micro 6.2</specification>
+    </description>
+    <profiles>
+        <profile name="Custom" description="openSUSE Leap Micro 6.2" arch="x86_64"/>
+    </profiles>
+    <preferences>
+        <version>0.0.1</version>
+        <packagemanager>zypper</packagemanager>
+        <timezone>UTC</timezone>
+        <keytable>us</keytable> 
+        <type image="oem" 
+              filesystem="btrfs" 
+              format="qcow2"
+              firmware="uefi"
+              devicepersistency="by-uuid"
+              kernelcmdline="quiet systemd.show_status=1 transactional-update.passthrough net.ifnames=0 biosdevname=0">
+            <size unit="G">32</size>
+        </type>
+    </preferences>
+
+    <repository type="rpm-md" alias="repo-main" imageinclude="true">
+        <source path="https://cdn.opensuse.org/distribution/leap-micro/6.2/product/repo/openSUSE-Leap-Micro-6.2-x86_64/"/>
+    </repository>
+
+    <packages type="bootstrap">
+        <package name="zypper"/>
+        <package name="Leap-Micro-release"/>
+        <package name="shadow"/>
+
+        <package name="ca-certificates-mozilla"/>
+    </packages>
+    
+    <packages type="image">
+        <!-- Base -->
+        <package name="kernel-default"/>
+        <package name="systemd"/>
+        <package name="bash"/>
+        <package name="coreutils"/>
+        <package name="util-linux"/>
+        <package name="procps"/>
+        <package name="iproute2"/>
+        <package name="iputils"/>
+        <package name="ethtool"/>
+        <package name="conntrack-tools"/>
+
+        <!-- Networking -->
+        <package name="NetworkManager"/>
+        <package name="iptables"/>
+        <package name="nftables"/>
+        <package name="curl"/>
+        <package name="ca-certificates"/> 
+        <package name="openssl"/>
+
+        <!-- Virtualization -->
+        <package name="qemu-guest-agent"/>
+        <package name="cloud-init"/>
+
+        <!-- Storage -->
+        <package name="open-iscsi"/>
+        <package name="nfs-client"/>
+        <package name="nvme-cli"/>
+
+        <!-- Filesystems-->
+        <package name="e2fsprogs"/>
+        <package name="xfsprogs"/>
+        <package name="dosfstools"/>
+        <package name="parted"/>
+
+        <!-- Time -->
+        <package name="chrony"/>
+
+        <!-- Utils -->
+        <package name="kbd"/>
+        <package name="sudo"/>
+        <package name="tar"/>
+        <package name="gzip"/>
+        <package name="rsync"/>                
+
+        <!-- Others -->
+        <package name="shim" arch="x86_64"/>
+        <package name="grub2-x86_64-efi" arch="x86_64"/>
+        <package name="grub2-i386-pc"/>
+        <package name="vim-small"/>
+        <package name="transactional-update"/>
+        <package name="btrfsprogs"/>
+        <package name="microos-tools"/>
+        <package name="openSUSE-repos-LeapMicro"/>
+        <package name="dracut"/>
+        <package name="dracut-kiwi-oem-repart"/>
+        <package name="openSUSE-build-key"/>
+        <package name="nss-mymachines"/> 
+        <package name="libopenssl3"/> 
+        <package name="netcfg"/>
+        <package name="dbus-1"/>
+        <package name="polkit"/>
+        <package name="glibc-locale"/>
+        <package name="glibc-locale-base"/>
+        <package name="openssh"/>
+
+     </packages>
+
+</image>
